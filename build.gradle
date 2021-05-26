@@ -1,0 +1,19 @@
+plugins {
+    id 'java-library'
+    id 'pl.allegro.tech.build.axion-release' version '1.13.2'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+    implementation group: 'com.github.tomakehurst', name: 'wiremock-standalone', version: '2.27.2'
+
+    testImplementation 'junit:junit:4.13.1'
+}
+
+allprojects {
+    version = scmVersion.version
+}
