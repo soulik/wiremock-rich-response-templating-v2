@@ -1,4 +1,4 @@
-package io.github.negokaz.wiremock.responsetemplating.rich;
+package com.github.negokaz.wiremock.transformer;
 
 import wiremock.com.github.jknack.handlebars.Helper;
 import wiremock.com.github.jknack.handlebars.Options;

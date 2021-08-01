@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class ResponseTemplateTransformer extends com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemplateTransformer {
+public class RichResponseTemplateTransformer extends com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemplateTransformer {
 
     private static Map<String, Helper> createHelpers(Map<String, Helper> additionalHelpers) {
         final Map<String, Helper> helpers = new HashMap<>();
@@ -24,19 +24,19 @@ public class ResponseTemplateTransformer extends com.github.tomakehurst.wiremock
         return helpers;
     }
 
-    public ResponseTemplateTransformer() {
+    public RichResponseTemplateTransformer() {
         super(false, createHelpers(new HashMap<>()));
     }
 
-    public ResponseTemplateTransformer(boolean global) {
+    public RichResponseTemplateTransformer(boolean global) {
         super(global, createHelpers(new HashMap<>()));
     }
 
-    public ResponseTemplateTransformer(boolean global, Map<String, Helper> helpers) {
+    public RichResponseTemplateTransformer(boolean global, Map<String, Helper> helpers) {
         super(global, createHelpers(helpers));
     }
 
-    public ResponseTemplateTransformer(boolean global, Handlebars handlebars, Map<String, Helper> helpers, Long maxCacheEntries, Set<String> permittedSystemKeys) {
+    public RichResponseTemplateTransformer(boolean global, Handlebars handlebars, Map<String, Helper> helpers, Long maxCacheEntries, Set<String> permittedSystemKeys) {
         super(global, handlebars, createHelpers(helpers), maxCacheEntries, permittedSystemKeys);
     }
 }
