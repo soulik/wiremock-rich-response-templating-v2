@@ -1,4 +1,4 @@
-package io.github.negokaz.wiremock.responsetemplating.rich;
+package com.github.negokaz.wiremock.transformer;
 
 import wiremock.com.github.jknack.handlebars.Handlebars;
 import wiremock.com.github.jknack.handlebars.Helper;
@@ -22,6 +22,10 @@ public class ResponseTemplateTransformer extends com.github.tomakehurst.wiremock
         }
         helpers.putAll(additionalHelpers);
         return helpers;
+    }
+
+    public ResponseTemplateTransformer() {
+        super(false, createHelpers(new HashMap<>()));
     }
 
     public ResponseTemplateTransformer(boolean global) {
