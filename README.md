@@ -1,8 +1,45 @@
-# WireMock Rich Response Templating
+# WireMock Rich Response Templating Extension
 
 A [WireMock](http://wiremock.org/) extension that provides response templating with more Handlebars helpers.
 
-## Usages
+## Usage with WireMock Standalone JAR
+
+Download the following JARs
+
+- WireMock standalone JAR from [official website](https://wiremock.org/docs/running-standalone/)
+- This extension JAR (`wiremock-rich-response-templating-x.x.x.jar`) from [releases page](https://github.com/negokaz/wiremock-rich-response-templating/releases)
+
+Start WireMock server using the following command.
+
+```shell
+java -cp "wiremock-jre8-standalone-2.29.1.jar;wiremock-rich-response-templating-0.1.1-SNAPSHOT.jar" \
+  com.github.tomakehurst.wiremock.standalone.WireMockServerRunner \
+  --extensions com.github.negokaz.wiremock.transformer.RichResponseTemplateTransformer
+```
+
+You can use response templating with `.withTransformers("response-template")` which provides additional helpers.
+
+You can use the response templating with additional helpers this extension provides
+by specifying `.withTransformers("response-template")` on each stub.
+
+```java
+wireMock.stubFor(get(urlMatching("/templated"))
+    .willReturn(aResponse()
+        .withHeader("Content-Type", "application/json")
+        .withBody("{ \"numbers\": [{{#each (range from=10 to=12)}} {{this}} {{#unless @last}},{{/unless}}{{/each}}] }")
+        .withTransformers("response-template")));
+```
+
+You can also use `com.github.negokaz.wiremock.transformer.GlobalRichResponseTemplateTransformer`
+which enables extended response templating automatically for all stubs.
+
+```shell
+java -cp "wiremock-jre8-standalone-2.29.1.jar;wiremock-rich-response-templating-0.1.1-SNAPSHOT.jar" \
+  com.github.tomakehurst.wiremock.standalone.WireMockServerRunner \
+  --extensions com.github.negokaz.wiremock.transformer.GlobalRichResponseTemplateTransformer
+```
+
+## Usage with WireMock Java API
 
 WIP
 
