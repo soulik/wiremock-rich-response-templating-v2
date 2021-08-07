@@ -25,6 +25,8 @@ public enum ComparisonHelpers implements Helper<Object> {
                     return lValue.compareTo(rValue) <= 0;
                 case "==":
                     return lValue.compareTo(rValue) == 0;
+                case "!=":
+                    return lValue.compareTo(rValue) != 0;
                 default:
                     return false;
             }

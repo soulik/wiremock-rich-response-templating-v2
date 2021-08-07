@@ -48,6 +48,7 @@ This extension provide following additional helpers.
     "lt": {{#if (compare 1 '<' 10)}}"A"{{else}}"B"{{/if}},
     "le": {{#if (compare 1 '<=' 10)}}"A"{{else}}"B"{{/if}},
     "eq": {{#if (compare 1 '==' 10)}}"A"{{else}}"B"{{/if}},
+    "ne": {{#if (compare 1 '!=' 10)}}"A"{{else}}"B"{{/if}}
 }
 ```
 *response*
@@ -58,6 +59,7 @@ This extension provide following additional helpers.
     "lt": "A",
     "le": "A",
     "eq": "B",
+    "ne": "A"
 }
 ```
 
