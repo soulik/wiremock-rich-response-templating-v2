@@ -1,42 +1,34 @@
 package com.github.negokaz.wiremock.transformer;
 
-import wiremock.com.github.jknack.handlebars.Handlebars;
-import wiremock.com.github.jknack.handlebars.Helper;
+import com.github.jknack.handlebars.Helper;
+import com.github.tomakehurst.wiremock.extension.TemplateHelperProviderExtension;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
-public class RichResponseTemplateTransformer extends com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemplateTransformer {
+public class RichResponseTemplateTransformer implements TemplateHelperProviderExtension {
+    private static Map<String, Helper<?>> createHelpers() {
+        return createHelpers(new HashMap<>());
+    }
+    private static Map<String, Helper<?>> createHelpers(Map<String, Helper<?>> additionalHelpers) {
+        final Map<String, Helper<?>> helpers = new HashMap<>();
 
-    private static Map<String, Helper> createHelpers(Map<String, Helper> additionalHelpers) {
-        final Map<String, Helper> helpers = new HashMap<>();
-        for (CollectionHelpers helper: CollectionHelpers.values()) {
-            helpers.put(helper.name(), helper);
-        }
-        for (ComparisonHelpers helper: ComparisonHelpers.values()) {
-            helpers.put(helper.name(), helper);
-        }
-        for (MathHelpers helper: MathHelpers.values()) {
-            helpers.put(helper.name(), helper);
-        }
+        helpers.putAll(CollectionHelpers.Helpers);
+        helpers.putAll(ComparisonHelpers.Helpers);
+        helpers.putAll(MathHelpers.Helpers);
+        helpers.putAll(DateHelpers.Helpers);
+
         helpers.putAll(additionalHelpers);
         return helpers;
     }
 
-    public RichResponseTemplateTransformer() {
-        super(false, createHelpers(new HashMap<>()));
+    @Override
+    public Map<String, Helper<?>> provideTemplateHelpers() {
+        return createHelpers();
     }
 
-    public RichResponseTemplateTransformer(boolean global) {
-        super(global, createHelpers(new HashMap<>()));
-    }
-
-    public RichResponseTemplateTransformer(boolean global, Map<String, Helper> helpers) {
-        super(global, createHelpers(helpers));
-    }
-
-    public RichResponseTemplateTransformer(boolean global, Handlebars handlebars, Map<String, Helper> helpers, Long maxCacheEntries, Set<String> permittedSystemKeys) {
-        super(global, handlebars, createHelpers(helpers), maxCacheEntries, permittedSystemKeys);
+    @Override
+    public String getName() {
+        return "rich-response-template";
     }
 }

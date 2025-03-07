@@ -15,7 +15,7 @@ public class ComparisonHelpersTest {
 
     @Rule
     public WireMockRule wireMockRule =
-            new WireMockRule(wireMockConfig().dynamicPort().extensions(new RichResponseTemplateTransformer(false)));
+            new WireMockRule(wireMockConfig().dynamicPort().extensions(new RichResponseTemplateTransformer()));
 
     @Before
     public void before() {

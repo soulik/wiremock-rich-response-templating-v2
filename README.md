@@ -146,6 +146,71 @@ This extension provide following additional helpers.
 { "divide": 3 }
 ```
 
+### Date Helpers
+
+#### date-plus-days
+
+*template*
+```
+{ "date": {{date-plus-days date="2025-03-07" days=13}} }
+```
+*response*
+```json
+{ "date": "2025-03-20" }
+```
+
+#### date-plus-days - negative amount
+
+*template*
+```
+{ "date": {{date-plus-days date="2025-03-07" days=-6}} }
+```
+*response*
+```json
+{ "date": "2025-03-01" }
+```
+
+#### date-range
+
+*template*
+```
+{ "dates": [{{#each (date-range from="2025-03-07" to="2025-03-10")}} "{{this}}" {{#unless @last}},{{/unless}} {{/each}}] }
+```
+*response*
+```json
+{ "dates": ["2025-03-07", "2025-03-08", "2025-03-09"] }
+```
+
+#### date-parse
+
+*template*
+```
+{ "date": { {{#with (date-parse date="2025-03-07")}} "year":{{year}},"month":{{month}},"day":{{day}},"dayOfWeek":{{dayOfWeek}},"dayOfYear":{{dayOfYear}} {{/with}} } }
+```
+*response*
+```json
+{
+  "date": {
+    "year": 2025,
+    "month": 3,
+    "day": 7,
+    "dayOfWeek": 5,
+    "dayOfYear": 66
+  }
+}
+```
+
+#### date-parse-to-unix
+
+*template*
+```
+{ "unix_date": {{date-parse-to-unix date="2025-03-07"}} }
+```
+*response*
+```json
+{ "unix_date": 1678137600 }
+```
+
 ## License
 
 Copyright (c) 2021 Kazuki Negoro
