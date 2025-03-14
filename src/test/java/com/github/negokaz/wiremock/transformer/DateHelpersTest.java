@@ -6,6 +6,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import java.util.HashMap;
+
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static io.restassured.RestAssured.given;
@@ -72,6 +74,27 @@ public class DateHelpersTest {
         );
         given()
                 .get("/test")
+                .then()
+                .body("dates", hasItems("2025-03-07", "2025-03-08", "2025-03-09"));
+    }
+
+    @Test
+    public void testDateRangeAsQueryParameter() {
+        wireMockRule.stubFor(
+                get(urlPathMatching("/test")
+                )
+                        .withQueryParam("fromDate", equalTo("2025-03-07"))
+                        .withQueryParam("toDate", equalTo("2025-03-10"))
+                        .willReturn(
+                                aResponse()
+                                        .withStatus(200)
+                                        .withHeader("Content-Type", "application/json")
+                                        .withBody("{ \"dates\": [{{#each (date-range from='{{request.query.fromDate}}' to='{{request.query.toDate}}')}} \"{{this}}\" {{#unless @last}},{{/unless}}{{/each}}] }")
+                                        .withTransformers("response-template")
+                        )
+        );
+        given()
+                .get("/test?fromDate=2025-03-07&toDate=2025-03-10")
                 .then()
                 .body("dates", hasItems("2025-03-07", "2025-03-08", "2025-03-09"));
     }

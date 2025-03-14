@@ -1,20 +1,20 @@
 package com.github.negokaz.wiremock.transformer;
 
 
+import com.github.jknack.handlebars.Helper;
 import com.github.jknack.handlebars.Options;
 import com.github.tomakehurst.wiremock.extension.responsetemplating.helpers.HandlebarsHelper;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.LongStream;
 
-public class DateHelpers {
+public class DateHelpersTransformers extends GenericHelper {
     private static final String DEFAULT_DATE_PATTERN = "yyyy-MM-dd";
     private static final ZoneOffset DEFAULT_DATE_ZONE = ZoneOffset.UTC;
 
@@ -24,36 +24,36 @@ public class DateHelpers {
         return LocalDate.parse(date, DateTimeFormatter.ofPattern(datePattern));
     }
 
-    protected static Map<String, HandlebarsHelper<Object>> createHelpers() {
+    public static Map<String, HandlebarsHelper<Object>> createHelpers() {
         Map<String, HandlebarsHelper<Object>> helpers = new HashMap<>();
 
-        helpers.put("date-plus-days", new RichResponseTemplateHelper() {
+        helpers.put("date-plus-days", new HandlebarsHelper<Object>() {
             @Override
-            protected Object safeApply(Object context, Options options) {
+            public Object apply(Object context, Options options) throws IOException {
                 final String dateFormat = options.hash("format", DEFAULT_DATE_PATTERN).toString();
-                final LocalDate parsedDate = parseDate(options.hash("date").toString(), dateFormat);
-                final long daysToAdd = Long.parseLong(options.hash("days").toString());
+                final LocalDate parsedDate = parseDate(getStringValue(options,"date"), dateFormat);
+                final long daysToAdd = Long.parseLong(getStringValue(options,"days"));
 
                 return parsedDate.plusDays(daysToAdd).format(DateTimeFormatter.ofPattern(dateFormat));
             }
         });
 
-        helpers.put("date-range", new RichResponseTemplateHelper() {
+        helpers.put("date-range", new HandlebarsHelper<Object>() {
             @Override
-            protected List<String> safeApply(Object context, Options options) {
+            public Object apply(Object context, Options options) throws IOException{
                 final String dateFormat = options.hash("format", DEFAULT_DATE_PATTERN).toString();
 
-                final LocalDate from = parseDate(options.hash("from").toString(), dateFormat);
-                final LocalDate to = parseDate(options.hash("to").toString(), dateFormat);
+                final LocalDate from = parseDate(getStringValue(options, "from"), dateFormat);
+                final LocalDate to = parseDate(getStringValue(options,"to"), dateFormat);
 
                 return from.datesUntil(to).map(date -> date.format(DateTimeFormatter.ofPattern(dateFormat))).collect(Collectors.toList());
             }
         });
-        helpers.put("date-parse", new RichResponseTemplateHelper() {
+        helpers.put("date-parse", new HandlebarsHelper<Object>() {
             @Override
-            protected Object safeApply(Object context, Options options) {
+            public Object apply(Object context, Options options) throws IOException {
                 final String dateFormat = options.hash("format", DEFAULT_DATE_PATTERN).toString();
-                final LocalDate parsedDate = parseDate(options.hash("date").toString(), dateFormat);
+                final LocalDate parsedDate = parseDate(getStringValue(options,"date"), dateFormat);
                 return new HashMap<>() {
                     {
                         put("year", parsedDate.getYear());
@@ -65,11 +65,11 @@ public class DateHelpers {
                 };
             }
         });
-        helpers.put("date-parse-to-unix", new RichResponseTemplateHelper() {
+        helpers.put("date-parse-to-unix", new HandlebarsHelper<Object>() {
             @Override
-            protected Object safeApply(Object context, Options options) {
+            public Object apply(Object context, Options options) throws IOException {
                 final String dateFormat = options.hash("format", DEFAULT_DATE_PATTERN).toString();
-                final LocalDate parsedDate = parseDate(options.hash("date").toString(), dateFormat);
+                final LocalDate parsedDate = parseDate(getStringValue(options,"date"), dateFormat);
                 final ZoneOffset zone = ZoneOffset.of(options.hash("zone", DEFAULT_DATE_ZONE.toString()).toString());
                 return parsedDate.toEpochSecond(LocalTime.of(0,0,0), zone);
             }
